@@ -18,3 +18,28 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+# Fichiers sensibles
+.env
+.env.dev
+.env.test
+
+# IDE / éditeurs
+.vscode/
+.idea/
+*.code-workspace
+
+# PHP CS Fixer
+.php-cs-fixer.cache
+php-cs-fixer.phar
+
+# Fichiers temporaires Windows
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# Fichiers de débogage / scratch
+scratch_*.php
+rapport_*.md
