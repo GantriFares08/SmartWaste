@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UtilisateurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -28,6 +30,25 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)] private ?string $telephone = null;
 
     #[ORM\Column(length: 255, nullable: true)] private ?string $ville = null;
+
+    /** @var Collection<int, Message> */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'expediteur')]
+    private Collection $messagesEnvoyes;
+
+    /** @var Collection<int, Message> */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'destinataire')]
+    private Collection $messagesRecus;
+
+    /** @var Collection<int, Notification> */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'utilisateur')]
+    private Collection $notifications;
+
+    public function __construct()
+    {
+        $this->messagesEnvoyes = new ArrayCollection();
+        $this->messagesRecus = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +141,30 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->ville = $ville;
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessagesEnvoyes(): Collection
+    {
+        return $this->messagesEnvoyes;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessagesRecus(): Collection
+    {
+        return $this->messagesRecus;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
     }
 
 }

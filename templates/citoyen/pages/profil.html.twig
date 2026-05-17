@@ -1,0 +1,65 @@
+{% extends 'base_citoyen.html.twig' %}
+
+{% block title %}SmartWaste — Mon Profil{% endblock %}
+
+{% block citoyen_content %}
+<div class="page active" id="page-u-profil">
+    <div class="topbar"><span class="page-title">Mon Profil Citoyen</span></div>
+    <div class="content">
+        <div style="display:grid; grid-template-columns: 300px 1fr; gap:20px">
+            {# Colonne Gauche : Carte Photo #}
+            <div class="card" style="padding:20px; text-align:center">
+                <div style="width:120px; height:120px; border-radius:50%; background:var(--color-bg-secondary); color:var(--color-primary); display:flex; align-items:center; justify-content:center; margin:0 auto 15px; font-size:40px; font-weight:600; border:4px solid white; box-shadow:0 4px 15px rgba(0,0,0,0.05)">
+                    {{ app.user.prenom|first|upper }}{{ app.user.nom|first|upper }}
+                </div>
+                <h3 style="margin:0">{{ app.user.prenom }} {{ app.user.nom }}</h3>
+                <p style="font-size:13px; color:var(--color-text-tertiary); margin:5px 0 20px">Membre depuis 05/2026</p>
+                <div style="display:flex; flex-direction:column; gap:10px">
+                    <button class="btn" style="width:100%"><i class="ti ti-camera"></i> Changer la photo</button>
+                    <button class="btn" style="width:100%; color:#dc3545"><i class="ti ti-trash"></i> Supprimer le compte</button>
+                </div>
+            </div>
+
+            {# Colonne Droite : Formulaire #}
+            <div class="card" style="padding:20px">
+                <form method="POST">
+                    <div style="font-weight:600; margin-bottom:20px; font-size:16px; border-bottom:1px solid var(--color-border); padding-bottom:10px">Informations Personnelles</div>
+                    
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success" style="color: #1D9E75; margin-bottom: 20px; padding: 10px 15px; background: #1D9E7515; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+                            <i class="ti ti-check" style="font-size: 20px"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px">
+                        <div class="form-group">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" name="prenom" value="{{ app.user.prenom }}" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nom</label>
+                            <input type="text" name="nom" value="{{ app.user.nom }}" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" value="{{ app.user.email }}" class="form-input" disabled style="background:#f8fafc">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ville / Zone</label>
+                        <input type="text" name="ville" value="{{ app.user.ville|default('') }}" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Téléphone</label>
+                        <input type="tel" name="telephone" value="{{ app.user.telephone|default('') }}" class="form-input">
+                    </div>
+                    <div style="margin-top:20px; text-align:right">
+                        <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy"></i> Mettre à jour mon profil</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

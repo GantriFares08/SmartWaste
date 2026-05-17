@@ -1,0 +1,100 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}SmartWaste — Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page active" id="page-dashboard">
+
+    <div class="topbar">
+        <span class="page-title">Tableau de bord</span>
+        <div class="topbar-right">
+            <button class="btn"><i class="ti ti-download"></i>Exporter</button>
+            <button class="btn btn-primary" onclick="window.location.href='{{ path('app_admin_signalements') }}'"><i class="ti ti-plus"></i>Nouveau</button>
+        </div>
+    </div>
+    <div class="content">
+        <div class="kpi-row">
+            <div class="kpi">
+                <div class="kpi-lbl"><i class="ti ti-alert-triangle"></i>Signalements</div>
+                <div class="kpi-val amber">{{ stats.total_signalements }}</div>
+                <div class="kpi-sub">total</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-lbl"><i class="ti ti-users"></i>Citoyens</div>
+                <div class="kpi-val blue">{{ stats.total_users }}</div>
+                <div class="kpi-sub">inscrits</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-lbl"><i class="ti ti-trash"></i>Poubelles</div>
+                <div class="kpi-val">{{ stats.active_sensors }}</div>
+                <div class="kpi-sub">référencées</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-lbl"><i class="ti ti-chart-line"></i>Efficacité</div>
+                <div class="kpi-val green">{{ stats.efficiency }}</div>
+                <div class="kpi-sub">traitement</div>
+            </div>
+        </div>
+        <div class="grid2">
+            <div class="card">
+                <div class="card-hd"><span class="card-title">Volume des signalements (7 jours)</span></div>
+                <div style="padding:20px; height:200px; display:flex; align-items:flex-end; gap:10px; justify-content:space-between">
+                    <div style="flex:1; background:#E6F1FB; height:40%; border-radius:4px" title="Lun: 12"></div>
+                    <div style="flex:1; background:#E6F1FB; height:65%; border-radius:4px" title="Mar: 18"></div>
+                    <div style="flex:1; background:#185FA5; height:85%; border-radius:4px" title="Mer: 24"></div>
+                    <div style="flex:1; background:#E6F1FB; height:50%; border-radius:4px" title="Jeu: 15"></div>
+                    <div style="flex:1; background:#E6F1FB; height:30%; border-radius:4px" title="Ven: 9"></div>
+                    <div style="flex:1; background:#E6F1FB; height:45%; border-radius:4px" title="Sam: 14"></div>
+                    <div style="flex:1; background:#E6F1FB; height:70%; border-radius:4px" title="Dim: 20"></div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+                <div class="card" style="padding:16px">
+                    <div style="font-size:13px;font-weight:600;margin-bottom:12px">État des poubelles</div>
+                    <div class="stat-bar-row">
+                        <span class="stat-bar-lbl">Normale</span>
+                        <div class="stat-bar-track"><div class="stat-bar-fill" style="width:57%;background:#1D9E75"></div></div>
+                        <span class="stat-bar-val" style="color:#1D9E75">21</span>
+                    </div>
+                    <div class="stat-bar-row">
+                        <span class="stat-bar-lbl">Critique</span>
+                        <div class="stat-bar-track"><div class="stat-bar-fill" style="width:22%;background:#A32D2D"></div></div>
+                        <span class="stat-bar-val" style="color:#A32D2D">8</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-hd">
+                <span class="card-title">Signalements récents</span>
+                <button class="btn" onclick="window.location.href='{{ path('app_admin_signalements') }}'">Voir tout <i class="ti ti-arrow-right"></i></button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:70px">ID</th>
+                        <th>Référence / Lieu</th>
+                        <th style="width:100px">Date</th>
+                        <th style="width:100px">Statut</th>
+                        <th style="width:80px">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sig in recent_signalements %}
+                        <tr>
+                            <td style="color:var(--color-text-tertiary)">#{{ sig.id }}</td>
+                            <td>{{ sig.poubelle ? sig.poubelle.reference : 'Lieu inconnu' }}</td>
+                            <td>{{ sig.createdAt|date('d/m/Y') }}</td>
+                            <td>
+                                {% set badge = sig.statut == 'Traité' ? 'green' : (sig.statut == 'En cours' ? 'amber' : 'red') %}
+                                <span class="badge {{ badge }}">{{ sig.statut }}</span>
+                            </td>
+                            <td><button class="btn" style="padding:4px 8px"><i class="ti ti-edit"></i></button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

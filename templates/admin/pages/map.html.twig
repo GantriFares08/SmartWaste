@@ -1,0 +1,97 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}SmartWaste — Carte Administrative{% endblock %}
+
+{% block admin_content %}
+<div class="page active" id="page-map">
+    <div class="topbar">
+        <span class="page-title">Supervision Géographique</span>
+        <div class="topbar-right">
+            <span class="badge gray">{{ poubelles|length }} Capteurs connectés</span>
+        </div>
+    </div>
+    <div class="content">
+        <div class="card" style="padding:0; overflow:hidden; position:relative; min-height:500px;">
+            <div id="admin-map" style="height:500px; width:100%;"></div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+    if (typeof adminMap !== 'undefined' && adminMap) {
+        try {
+            adminMap.remove();
+        } catch(e) {}
+        adminMap = undefined;
+    }
+
+    var adminMap;
+
+    function initAdminMap() {
+        const container = document.getElementById('admin-map');
+        if (!container) return;
+
+        // Leaflet container clean check
+        if (container._leaflet_id) {
+            container.outerHTML = container.outerHTML; // clones element to strip events
+        }
+
+        adminMap = L.map('admin-map').setView([36.8065, 10.1815], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(adminMap);
+
+        const icons = {
+            normal:      { color: '#1D9E75' },
+            maintenance: { color: '#BA7517' },
+            alerte:      { color: '#A32D2D' }
+        };
+
+        function makeIcon(color) {
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style='background-color:${color}; width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow:0 0 6px rgba(0,0,0,0.3)'></div>`,
+                iconSize: [14, 14],
+                iconAnchor: [7, 7]
+            });
+        }
+
+        const data = [
+            {% for p in poubelles %}
+            {
+                id: {{ p.id }},
+                lat: {{ p.latitude }},
+                lng: {{ p.longitude }},
+                ref: "{{ p.reference }}",
+                cat: "{{ p.categorie ? p.categorie.nom : '' }}",
+                statut: "{{ p.statut|default('normal') }}"
+            },
+            {% endfor %}
+        ];
+
+        data.forEach(p => {
+            const color = p.statut === 'alerte' ? icons.alerte.color
+                        : p.statut === 'maintenance' ? icons.maintenance.color
+                        : icons.normal.color;
+
+            L.marker([p.lat, p.lng], { icon: makeIcon(color) })
+                .addTo(adminMap)
+                .bindPopup(`<b>Poubelle: ${p.ref}</b><br>Catégorie: ${p.cat}<br>Statut: ${p.statut}`);
+        });
+
+        setTimeout(function() {
+            if (adminMap) {
+                adminMap.invalidateSize();
+            }
+        }, 100);
+    }
+
+    // Attach to both standard page loads and Turbo loads
+    document.addEventListener('DOMContentLoaded', initAdminMap);
+    document.addEventListener('turbo:load', initAdminMap);
+</script>
+{% endblock %}

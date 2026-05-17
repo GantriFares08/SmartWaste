@@ -1,0 +1,90 @@
+<div class="card">
+    <div class="card-hd">
+        <span class="card-title"><i class="ti ti-map-2"></i> Poubelles proches de moi</span>
+    </div>
+    <div style="padding:15px">
+        <div id="citoyen-map" style="height: 300px; border-radius: 12px; overflow: hidden; background: #f0f4f8;">
+            {# Fallback if JS is disabled #}
+            <div class="map-grid"></div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+    if (typeof homeMap !== 'undefined' && homeMap) {
+        try {
+            homeMap.remove();
+        } catch(e) {}
+        homeMap = undefined;
+    }
+
+    var homeMap;
+
+    function initCitoyenHomeMap() {
+        const container = document.getElementById('citoyen-map');
+        if (!container) return;
+
+        // Leaflet container clean check
+        if (container._leaflet_id) {
+            container.outerHTML = container.outerHTML; // clones element to strip events
+        }
+
+        // Coordonnées par défaut (Tunis)
+        homeMap = L.map('citoyen-map').setView([36.8065, 10.1815], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(homeMap);
+
+        const customIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#1D9E75; width:12px; height:12px; border-radius:50%; border:2px solid white; box-shadow:0 0 5px rgba(0,0,0,0.2)'></div>",
+            iconSize: [12, 12],
+            iconAnchor: [6, 6]
+        });
+
+        const data = [
+            {% for p in poubelles %}
+            {
+                lat: {{ p.latitude }},
+                lng: {{ p.longitude }},
+                ref: "{{ p.reference }}",
+                cat: "{{ p.categorie ? p.categorie.nom : '' }}"
+            },
+            {% endfor %}
+        ];
+
+        data.forEach(p => {
+            L.marker([p.lat, p.lng], {icon: customIcon})
+                .addTo(homeMap)
+                .bindPopup(`<b>Poubelle: ${p.ref}</b><br>Catégorie: ${p.cat}`);
+        });
+
+        setTimeout(function() {
+            if (homeMap) {
+                homeMap.invalidateSize();
+            }
+        }, 100);
+
+        // Simuler la position du citoyen
+        if ("geolocation" in navigator && homeMap) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                if (homeMap) {
+                    homeMap.setView([lat, lng], 14);
+                    L.marker([lat, lng]).addTo(homeMap).bindPopup("<b>Ma position</b>").openPopup();
+                }
+            }, function(error) {
+                console.log("Geolocation error:", error);
+            });
+        }
+    }
+
+    // Attach to both standard page loads and Turbo loads
+    document.addEventListener('DOMContentLoaded', initCitoyenHomeMap);
+    document.addEventListener('turbo:load', initCitoyenHomeMap);
+</script>

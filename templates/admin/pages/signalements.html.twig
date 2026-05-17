@@ -1,0 +1,103 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}SmartWaste — Signalements{% endblock %}
+
+{% block admin_content %}
+<div class="page active" id="page-signalements">
+    <div class="topbar">
+        <span class="page-title">Gestion des signalements</span>
+        <div class="topbar-right" style="display: flex; gap: 10px;">
+            <select id="filterStatus" class="form-control" style="width: 150px; padding: 6px 12px;" onchange="filterTable()">
+                <option value="all">Tous les statuts</option>
+                <option value="En cours">En cours</option>
+                <option value="Traité">Traité</option>
+            </select>
+            <input type="text" id="filterSearch" class="form-control" placeholder="Recherche (ID, Auteur)..." style="width: 220px; padding: 6px 12px;" onkeyup="filterTable()">
+        </div>
+    </div>
+    <div class="content">
+        <div class="card">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; padding: 12px; border-bottom: 1px solid var(--color-border)">ID</th>
+                        <th style="text-align: left; padding: 12px; border-bottom: 1px solid var(--color-border)">Référence / Lieu</th>
+                        <th style="text-align: left; padding: 12px; border-bottom: 1px solid var(--color-border)">Auteur</th>
+                        <th style="text-align: left; padding: 12px; border-bottom: 1px solid var(--color-border)">Date</th>
+                        <th style="text-align: left; padding: 12px; border-bottom: 1px solid var(--color-border)">Statut</th>
+                        <th style="text-align: right; padding: 12px; border-bottom: 1px solid var(--color-border)">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sig in signalements %}
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--color-border); font-weight: 600">#{{ sig.id }}</td>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--color-border)">{{ sig.poubelle ? sig.poubelle.reference : 'Lieu inconnu' }}</td>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--color-border)">{{ sig.utilisateur.prenom }} {{ sig.utilisateur.nom }}</td>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--color-border); color: var(--color-text-tertiary)">{{ sig.createdAt|date('d/m/Y') }}</td>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--color-border)">
+                                {% set badge = sig.statut == 'Traité' ? 'green' : (sig.statut == 'En cours' ? 'amber' : 'red') %}
+                                <span class="badge {{ badge }}">{{ sig.statut }}</span>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid var(--color-border); text-align: right;">
+                                <button class="btn" title="Voir les détails" onclick="openModal('{{ sig.id }}', '{{ sig.utilisateur.prenom }} {{ sig.utilisateur.nom }}', '{{ sig.description|escape('js') }}', '{{ path('app_admin_signalement_assigner', {id: sig.id}) }}')"><i class="ti ti-eye"></i></button>
+                                <a href="{{ path('app_admin_signalement_valider', {id: sig.id}) }}" class="btn green" title="Valider & Marquer comme Traité" style="text-decoration:none;"><i class="ti ti-check"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{# Modale dynamique #}
+<div id="modal-container" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div class="card" style="width:500px; padding:20px; position:relative;">
+        <button onclick="closeModal()" style="position:absolute; top:10px; right:10px; border:none; background:none; cursor:pointer;"><i class="ti ti-x" style="font-size:20px"></i></button>
+        <h3>Détails du signalement <span id="modal-id"></span></h3>
+        <hr style="margin:15px 0; border:0; border-top:1px solid var(--color-border)">
+        <p><strong>Auteur:</strong> <span id="modal-auteur"></span></p>
+        <p><strong>Description:</strong></p>
+        <div id="modal-desc" style="background:#f8fafc; padding:10px; border-radius:8px; font-size:13px; color:var(--color-text-secondary); margin-bottom:20px"></div>
+        <div style="margin-top:20px; text-align:right; display:flex; justify-content:flex-end; gap:10px;">
+            <button class="btn" onclick="closeModal()">Fermer</button>
+            <a href="" id="modal-assign-btn" class="btn btn-primary" style="text-decoration:none;">Assigner à une équipe</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal(id, auteur, desc, assignUrl) {
+        document.getElementById('modal-id').innerText = '#' + id;
+        document.getElementById('modal-auteur').innerText = auteur;
+        document.getElementById('modal-desc').innerText = desc;
+        document.getElementById('modal-assign-btn').href = assignUrl;
+        document.getElementById('modal-container').style.display = 'flex';
+    }
+    function closeModal() {
+        document.getElementById('modal-container').style.display = 'none';
+    }
+
+    function filterTable() {
+        var status = document.getElementById('filterStatus').value.toLowerCase();
+        var search = document.getElementById('filterSearch').value.toLowerCase();
+        var rows = document.querySelectorAll('tbody tr');
+        
+        rows.forEach(function(row) {
+            var text = row.innerText.toLowerCase();
+            var rowStatusElement = row.querySelector('.badge');
+            var rowStatus = rowStatusElement ? rowStatusElement.innerText.toLowerCase() : '';
+            
+            var matchStatus = (status === 'all' || rowStatus === status);
+            var matchSearch = (search === '' || text.indexOf(search) > -1);
+            
+            if (matchStatus && matchSearch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}

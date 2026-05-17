@@ -1,0 +1,45 @@
+<div class="sidebar">
+    <div class="logo">
+        <div class="logo-name"><span class="logo-dot"></span>SmartWaste</div>
+        <div class="logo-sub">Mon espace citoyen</div>
+    </div>
+    <div class="nav">
+        <span class="nav-section">Mon espace</span>
+        <a href="{{ path('app_citoyen_dashboard') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_citoyen_dashboard' ? 'active' : '' }}">
+            <i class="ti ti-home"></i>Accueil
+        </a>
+        <a href="{{ path('app_citoyen_map') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_citoyen_map' ? 'active' : '' }}">
+            <i class="ti ti-map-pin"></i>Carte
+        </a>
+        <a href="{{ path('app_citoyen_signal') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_citoyen_signal' ? 'active' : '' }}">
+            <i class="ti ti-plus"></i>Signaler
+        </a>
+        <a href="{{ path('app_citoyen_mes_sig') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_citoyen_mes_sig' ? 'active' : '' }}">
+            <i class="ti ti-list"></i>Mes signalements
+        </a>
+        <a href="{{ path('app_citoyen_messages') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_citoyen_messages' ? 'active' : '' }}">
+            <i class="ti ti-message"></i>Messages
+        </a>
+        {% set unread_notifs = app.user.notifications|filter(n => not n.lue)|length %}
+        <a href="{{ path('app_citoyen_notifs') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_citoyen_notifs' ? 'active' : '' }}" style="justify-content: space-between;">
+            <div style="display:flex; align-items:center; gap:10px;"><i class="ti ti-bell"></i>Notifications</div>
+            {% if unread_notifs > 0 %}
+                <span style="background: #ff4757; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold;">{{ unread_notifs }}</span>
+            {% endif %}
+        </a>
+        <a href="{{ path('app_citoyen_profil') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_citoyen_profil' ? 'active' : '' }}">
+            <i class="ti ti-user"></i>Mon profil
+        </a>
+    </div>
+
+    <div class="user-bar">
+        <div class="avatar" style="background:#E6F1FB;color:#185FA5">{{ app.user.prenom|first|upper }}{{ app.user.nom|first|upper }}</div>
+        <div class="user-info">
+            <div class="user-name">{{ app.user.prenom }} {{ app.user.nom }}</div>
+            <div class="user-role">Citoyen</div>
+        </div>
+        <a href="{{ path('app_logout') }}" style="margin-left:auto; color:var(--color-text-tertiary); text-decoration:none;" title="Déconnexion">
+            <i class="ti ti-logout" style="font-size:18px"></i>
+        </a>
+    </div>
+</div>

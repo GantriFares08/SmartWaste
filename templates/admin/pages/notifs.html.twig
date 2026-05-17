@@ -1,0 +1,47 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}SmartWaste — Notifications{% endblock %}
+
+{% block admin_content %}
+<div class="page active" id="page-a-notifs">
+    <div class="topbar"><span class="page-title">Notifications</span></div>
+    <div class="content">
+        {% if notifications|length > 0 %}
+            <div style="display:flex; flex-direction:column; gap:12px">
+                {% for notif in notifications %}
+                    <a href="{{ path('app_admin_signalements') }}" style="text-decoration:none; display:block; transition: transform 0.15s ease;">
+                        <div class="card" style="padding:15px; display:flex; gap:15px; align-items:start; cursor:pointer;
+                            {{ notif.lue ? 'opacity:0.7' : 'border-left:4px solid var(--color-primary)' }}"
+                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.1)';"
+                            onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                            <div style="width:40px; height:40px; border-radius:10px; background:var(--color-bg-secondary); color:var(--color-primary); display:flex; align-items:center; justify-content:center; flex-shrink:0">
+                                <i class="ti ti-bell{{ notif.lue ? '' : '-ringing' }}" style="font-size:20px"></i>
+                            </div>
+                            <div style="flex-grow:1">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px">
+                                    <span style="font-weight:600; font-size:14px; color:var(--color-text-primary)">
+                                        {% if not notif.lue %}
+                                            <span style="display:inline-block; width:8px; height:8px; background:#ff4757; border-radius:50%; margin-right:6px; vertical-align:middle;"></span>
+                                        {% endif %}
+                                        Nouveau signalement citoyen
+                                    </span>
+                                    <span style="font-size:11px; color:var(--color-text-tertiary)">{{ notif.createdAt|date('d/m/Y H:i') }}</span>
+                                </div>
+                                <p style="font-size:13px; color:var(--color-text-secondary); margin:0 0 6px 0">{{ notif.message }}</p>
+                                <span style="font-size:12px; color:var(--color-primary); font-weight:500;">
+                                    <i class="ti ti-arrow-right"></i> Gérer les signalements
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card" style="padding:40px; text-align:center">
+                <i class="ti ti-bell-off" style="font-size:48px; color:var(--color-border); margin-bottom:15px; display:block"></i>
+                <p style="color:var(--color-text-secondary)">Aucune nouvelle notification pour le moment.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

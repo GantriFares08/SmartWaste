@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion — SmartWaste</title>
-    <link rel="stylesheet" href="{{ asset('authentication/css/login.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-</head>
-<body>
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion — SmartWaste{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/authentication/css/login.css') }}">
+{% endblock %}
+
+{% block body %}
     <div class="login-container">
         <div class="logo">
             <div class="logo-dot"></div>
@@ -27,8 +25,8 @@
         {% endif %}
 
         <div class="role-selection">
-            <button class="role-btn active" id="btn-admin" onclick="selectRole('admin')">Administrateur</button>
-            <button class="role-btn" id="btn-user" onclick="selectRole('user')">Citoyen</button>
+            <button class="role-btn active" id="btn-user" onclick="selectRole('user')">Citoyen</button>
+            <button class="role-btn" id="btn-admin" onclick="selectRole('admin')">Administrateur</button>
         </div>
 
         <form id="loginForm" method="post">
@@ -49,11 +47,11 @@
         </form>
 
         <div class="footer-links">
-            <p><a href="#">Mot de passe oublié ?</a></p>
-            <p class="mt-10">Pas encore de compte ? <a href="{{ path('app_register') }}">S'inscrire</a></p>
+            <p class="mt-10" id="register-link">Pas encore de compte ? <a href="{{ path('app_register') }}">S'inscrire</a></p>
         </div>
     </div>
+{% endblock %}
 
-    <script src="{{ asset('authentication/js/login.js') }}"></script>
-</body>
-</html>
+{% block javascripts %}
+    <script src="{{ asset('assets/authentication/js/login.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}SmartWaste — Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page active" id="page-add-admin">
+
+                    <div class="topbar">
+                        <span class="page-title">Ajouter un Administrateur</span>
+                        <div class="topbar-right">
+                            <button class="btn" onclick="window.location.href='{{ path('app_admin_users') }}'"><i class="ti ti-arrow-left"></i>Retour</button>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="card" style="max-width: 800px; margin: 0 auto; padding: 30px;">
+                            {% for message in app.flashes('error') %}
+                                <div class="alert alert-danger" style="color: #dc3545; margin-bottom: 15px;">{{ message }}</div>
+                            {% endfor %}
+                            <form action="{{ path('app_admin_add_admin') }}" method="POST">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="firstName">Prénom</label>
+                                        <input type="text" id="firstName" name="prenom" class="form-control" placeholder="Entrez le prénom" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Nom</label>
+                                        <input type="text" id="lastName" name="nom" class="form-control" placeholder="Entrez le nom" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Adresse Email</label>
+                                    <input type="email" id="email" name="email" class="form-control" placeholder="exemple@smart.tn" required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="password">Mot de passe</label>
+                                        <input type="password" id="password" name="password" class="form-control" placeholder="Créer un mot de passe" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirmPassword">Confirmer le mot de passe</label>
+                                        <input type="password" id="confirmPassword" name="password_confirm" class="form-control" placeholder="Confirmer le mot de passe" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="role">Rôle initial</label>
+                                    <select id="role" name="roles" class="form-control" required>
+                                        <option value="ROLE_ADMIN" selected>Administrateur (ROLE_ADMIN)</option>
+                                        <option value="ROLE_USER">Citoyen (ROLE_USER)</option>
+                                    </select>
+                                </div>
+                                <div style="margin-top: 30px; text-align: right;">
+                                    <button type="button" class="btn" onclick="window.location.href='{{ path('app_admin_users') }}'" style="margin-right: 10px;">Annuler</button>
+                                    <button type="submit" class="btn btn-primary btn-submit">Enregistrer l'administrateur</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SmartWaste — Administration{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+    <h2 class="sr-only">SmartWaste — Interface Administrateur</h2>
+    <div class="app">
+        <div class="layout">
+            {% include 'admin/component/_sidebar.html.twig' %}
+            <div class="main">
+                {% block admin_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/admin/js/script.js') }}?v=1.0.1"></script>
+{% endblock %}

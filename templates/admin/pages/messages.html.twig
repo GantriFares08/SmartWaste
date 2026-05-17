@@ -1,0 +1,90 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}SmartWaste — Messagerie Administrateur{% endblock %}
+
+{% block admin_content %}
+<div class="page active" id="page-messages">
+    <div class="topbar">
+        <span class="page-title">Messagerie Administrateur</span>
+        <div class="topbar-right">
+            <span class="badge green">Support Actif</span>
+        </div>
+    </div>
+    <div class="chat-layout">
+        <div class="chat-sidebar">
+            <div class="chat-list-header">Conversations</div>
+            <div class="chat-list">
+                {% for item in citizens %}
+                    {% set cit = item.entity %}
+                    <a href="{{ path('app_admin_messages', {citoyen: cit.id}) }}" class="chat-user-item {{ activeCitizen and activeCitizen.id == cit.id ? 'active' : '' }}" style="text-decoration:none; color:inherit;">
+                        <div class="chat-user-avatar" style="background: {{ activeCitizen and activeCitizen.id == cit.id ? '#1D9E75' : '#E1F5EE' }}; color: {{ activeCitizen and activeCitizen.id == cit.id ? '#fff' : '#0F6E56' }};">
+                            {{ cit.prenom|first|upper }}{{ cit.nom|first|upper }}
+                        </div>
+                        <div class="chat-user-info">
+                            <div class="chat-user-name" style="display:flex; justify-content:space-between; align-items:center;">
+                                <span>{{ cit.prenom }} {{ cit.nom }}</span>
+                                {% if item.unreadCount > 0 %}
+                                    <span class="badge red" style="font-size:9px; padding:2px 6px;">{{ item.unreadCount }}</span>
+                                {% endif %}
+                             </div>
+                             <div class="chat-user-last" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">
+                                 {{ item.lastMessage }}
+                             </div>
+                        </div>
+                    </a>
+                {% else %}
+                    <div style="padding:20px; text-align:center; color:var(--color-text-tertiary); font-size:13px;">Aucune conversation disponible.</div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="chat-container">
+            {% if activeCitizen %}
+                <div class="chat-header">
+                    <div class="avatar" style="background:#1D9E75; color:#fff;">
+                        {{ activeCitizen.prenom|first|upper }}{{ activeCitizen.nom|first|upper }}
+                    </div>
+                    <div>
+                        <div style="font-size:14px;font-weight:600">{{ activeCitizen.prenom }} {{ activeCitizen.nom }}</div>
+                        <div style="font-size:11px;color:#1D9E75">Citoyen SmartWaste</div>
+                    </div>
+                </div>
+                <div class="chat-messages" id="admin-chat-box">
+                    {% for msg in messages %}
+                        {% if msg.expediteur == app.user %}
+                            <div class="message sent" style="background:#1D9E75; color:#fff; align-self:flex-end;">
+                                <div>{{ msg.contenu }}</div>
+                                <div class="message-time">{{ msg.createdAt|date('d/m H:i') }}</div>
+                            </div>
+                        {% else %}
+                            <div class="message received">
+                                <div>{{ msg.contenu }}</div>
+                                <div class="message-time">{{ msg.createdAt|date('d/m H:i') }}</div>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div style="text-align: center; color: var(--color-text-tertiary); margin-top: 40px; font-size: 13px;">
+                            Aucun message. Commencez la discussion ci-dessous.
+                        </div>
+                    {% endfor %}
+                </div>
+                <form method="POST" class="chat-input-area" style="margin: 0; display: flex; width: 100%;">
+                    <input type="text" name="contenu" class="chat-input" placeholder="Écrivez votre réponse..." required style="flex-grow: 1;">
+                    <button type="submit" class="btn-send" style="background:#1D9E75;"><i class="ti ti-send"></i></button>
+                </form>
+            {% else %}
+                <div style="flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; color:var(--color-text-tertiary); gap:12px;">
+                    <i class="ti ti-message" style="font-size:48px; color:var(--color-text-tertiary);"></i>
+                    <span style="font-size:14px;">Sélectionnez un citoyen pour commencer à chatter</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    const adminChatBox = document.getElementById('admin-chat-box');
+    if (adminChatBox) { 
+        adminChatBox.scrollTop = adminChatBox.scrollHeight; 
+    }
+</script>
+{% endblock %}

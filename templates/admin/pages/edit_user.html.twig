@@ -1,0 +1,54 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}SmartWaste — Modifier Utilisateur{% endblock %}
+
+{% block admin_content %}
+<div class="page active" id="page-edit-user">
+    <div class="topbar">
+        <span class="page-title">Modifier l'Utilisateur</span>
+        <div class="topbar-right">
+            <button class="btn" onclick="window.location.href='{{ path('app_admin_users') }}'"><i class="ti ti-arrow-left"></i>Retour</button>
+        </div>
+    </div>
+    <div class="content">
+        <div class="card" style="max-width: 800px; margin: 0 auto; padding: 30px;">
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger" style="color: #dc3545; margin-bottom: 15px;">{{ message }}</div>
+            {% endfor %}
+            <form action="{{ path('app_admin_user_edit', {'id': user.id}) }}" method="POST">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">Prénom</label>
+                        <input type="text" id="firstName" name="prenom" class="form-control" value="{{ user.prenom }}" placeholder="Entrez le prénom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Nom</label>
+                        <input type="text" id="lastName" name="nom" class="form-control" value="{{ user.nom }}" placeholder="Entrez le nom" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Adresse Email</label>
+                    <input type="email" id="email" name="email" class="form-control" value="{{ user.email }}" placeholder="exemple@smart.tn" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Nouveau mot de passe (laisser vide pour ne pas modifier)</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Entrez un nouveau mot de passe">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="role">Rôle</label>
+                    <select id="role" name="roles" class="form-control" required>
+                        <option value="ROLE_ADMIN" {% if 'ROLE_ADMIN' in user.roles %}selected{% endif %}>Administrateur (ROLE_ADMIN)</option>
+                        <option value="ROLE_USER" {% if 'ROLE_USER' in user.roles and 'ROLE_ADMIN' not in user.roles %}selected{% endif %}>Citoyen (ROLE_USER)</option>
+                    </select>
+                </div>
+                <div style="margin-top: 30px; text-align: right;">
+                    <button type="button" class="btn" onclick="window.location.href='{{ path('app_admin_users') }}'" style="margin-right: 10px;">Annuler</button>
+                    <button type="submit" class="btn btn-primary btn-submit">Enregistrer les modifications</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

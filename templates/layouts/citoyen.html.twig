@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% block citoyen_title %}SmartWaste — Citoyen{% endblock %}{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/citoyen/css/style.css') }}">
+    {% block citoyen_stylesheets %}{% endblock %}
+{% endblock %}
+
+{% block body %}
+    <h2 class="sr-only">SmartWaste — Espace Citoyen</h2>
+    <div class="app">
+        <div class="layout">
+            {{ include('citoyen/component/_sidebar.html.twig') }}
+            <div class="main">
+                {% block citoyen_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/citoyen/js/script.js') }}?v=1.0.1"></script>
+    {% block citoyen_javascripts %}{% endblock %}
+{% endblock %}

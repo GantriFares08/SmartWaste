@@ -1,152 +1,148 @@
-<!DOCTYPE html>
-<html lang="fr">
+{% extends 'base.html.twig' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription — SmartWaste</title>
-     <link rel="stylesheet" href="{{ asset('authentication/css/login.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <link rel="stylesheet" href="{{ asset('authentication/css/register.css') }}">
-</head>
+{% block title %}Inscription — SmartWaste{% endblock %}
 
-<body>
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/authentication/css/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/authentication/css/register.css') }}">
+{% endblock %}
+
+{% block body %}
     <div class="register-container">
-
         <div class="logo">
             <div class="logo-dot"></div>
             <div class="logo-name">SmartWaste</div>
         </div>
         <p class="login-title" style="margin-bottom:20px">Créer un compte citoyen</p>
+        
         {% for message in app.flashes('error') %}
             <div class="alert alert-danger" style="color: #dc3545; text-align: center; margin-bottom: 15px;">{{ message }}</div>
         {% endfor %}
+        
         <form method="post" action="{{ path('app_register') }}" id="registerForm">
-
-        <!-- Indicateur 2 étapes -->
-        <div class="step-indicator">
-            <div class="step">
-                <div class="step-circle active" id="circle-1">1</div>
-                <div class="step-label active" id="label-1">Informations</div>
+            <!-- Indicateur 2 étapes -->
+            <div class="step-indicator">
+                <div class="step">
+                    <div class="step-circle active" id="circle-1">1</div>
+                    <div class="step-label active" id="label-1">Informations</div>
+                </div>
+                <div class="step-line" id="line-1"></div>
+                <div class="step">
+                    <div class="step-circle" id="circle-2">2</div>
+                    <div class="step-label" id="label-2">Sécurité</div>
+                </div>
             </div>
-            <div class="step-line" id="line-1"></div>
-            <div class="step">
-                <div class="step-circle" id="circle-2">2</div>
-                <div class="step-label" id="label-2">Sécurité</div>
-            </div>
-        </div>
 
-        <!-- ÉTAPE 1 : Informations personnelles -->
-        <div class="step-panel active" id="panel-1">
-            <div class="section-title"><i class="ti ti-id-badge"></i>Informations personnelles</div>
-            <div class="form-row">
-                <div class="form-group" style="margin-bottom:0">
-                    <label class="form-label">Prénom</label>
-                    <div class="input-icon-wrap">
-                        <i class="ti ti-user"></i>
-                        <input type="text" class="form-input" id="prenom" name="prenom" placeholder="Prénom" required>
+            <!-- ÉTAPE 1 : Informations personnelles -->
+            <div class="step-panel active" id="panel-1">
+                <div class="section-title"><i class="ti ti-id-badge"></i>Informations personnelles</div>
+                <div class="form-row">
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="form-label">Prénom</label>
+                        <div class="input-icon-wrap">
+                            <i class="ti ti-user"></i>
+                            <input type="text" class="form-input" id="prenom" name="prenom" placeholder="Prénom" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="form-label">Nom</label>
+                        <div class="input-icon-wrap">
+                            <i class="ti ti-user"></i>
+                            <input type="text" class="form-input" id="nom" name="nom" placeholder="Nom" required>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group" style="margin-bottom:0">
-                    <label class="form-label">Nom</label>
+                <div style="margin-top:14px"></div>
+                <div class="form-group">
+                    <label class="form-label">Adresse email</label>
                     <div class="input-icon-wrap">
-                        <i class="ti ti-user"></i>
-                        <input type="text" class="form-input" id="nom" name="nom" placeholder="Nom" required>
+                        <i class="ti ti-mail"></i>
+                        <input type="email" class="form-input" id="email" name="email" placeholder="exemple@smart.tn" required>
                     </div>
                 </div>
-            </div>
-            <div style="margin-top:14px"></div>
-            <div class="form-group">
-                <label class="form-label">Adresse email</label>
-                <div class="input-icon-wrap">
-                    <i class="ti ti-mail"></i>
-                    <input type="email" class="form-input" id="email" name="email" placeholder="exemple@smart.tn" required>
+                <div class="form-group">
+                    <label class="form-label">Téléphone <span style="color:#bbb;font-weight:400">(optionnel)</span></label>
+                    <div class="input-icon-wrap">
+                        <i class="ti ti-phone"></i>
+                        <input type="tel" class="form-input" id="tel" name="tel" placeholder="+216 XX XXX XXX">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Téléphone <span style="color:#bbb;font-weight:400">(optionnel)</span></label>
-                <div class="input-icon-wrap">
-                    <i class="ti ti-phone"></i>
-                    <input type="tel" class="form-input" id="tel" name="tel" placeholder="+216 XX XXX XXX">
+                <div class="form-group">
+                    <label class="form-label">Ville / Zone</label>
+                    <div class="input-icon-wrap">
+                        <i class="ti ti-map-pin"></i>
+                        <select class="form-input" id="ville" name="ville">
+                            <option value="">Sélectionner...</option>
+                            <option>Tunis</option>
+                            <option>Sfax</option>
+                            <option>Sousse</option>
+                            <option>Monastir</option>
+                            <option>Bizerte</option>
+                            <option>Autre</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Ville / Zone</label>
-                <div class="input-icon-wrap">
-                    <i class="ti ti-map-pin"></i>
-                    <select class="form-input" id="ville" name="ville">
-                        <option value="">Sélectionner...</option>
-                        <option>Tunis</option>
-                        <option>Sfax</option>
-                        <option>Sousse</option>
-                        <option>Monastir</option>
-                        <option>Bizerte</option>
-                        <option>Autre</option>
-                    </select>
-                </div>
-            </div>
-            <button type="button" class="btn-login" style="width:100%;margin-top:4px" onclick="validateStep1()">
-                Continuer <i class="ti ti-arrow-right" style="font-size:15px;vertical-align:-2px"></i>
-            </button>
-        </div>
-
-        <!-- ÉTAPE 2 : Sécurité -->
-        <div class="step-panel" id="panel-2">
-            <div class="section-title"><i class="ti ti-lock"></i>Sécurité du compte</div>
-            <div class="form-group">
-                <label class="form-label">Mot de passe</label>
-                <div class="password-wrap">
-                    <input type="password" class="form-input" id="password" name="password" placeholder="••••••••"
-                        oninput="checkStrength(this.value)" required>
-                    <button class="toggle-pw" type="button" onclick="togglePw('password',this)" tabindex="-1">
-                        <i class="ti ti-eye"></i>
-                    </button>
-                </div>
-                <div class="strength-bar">
-                    <div class="strength-fill" id="strength-fill"></div>
-                </div>
-                <div class="strength-label" id="strength-label" style="color:#bbb">—</div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Confirmer le mot de passe</label>
-                <div class="password-wrap">
-                    <input type="password" class="form-input" id="password2" name="password2" placeholder="••••••••" required>
-                    <button class="toggle-pw" type="button" onclick="togglePw('password2',this)" tabindex="-1">
-                        <i class="ti ti-eye"></i>
-                    </button>
-                </div>
-                <div id="pw-match-msg" style="font-size:11px;margin-top:4px;min-height:14px"></div>
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="cgu" required>
-                <label for="cgu">J'accepte les <a href="#">Conditions d'utilisation</a> et la <a href="#">Politique de
-                        confidentialité</a> de SmartWaste.</label>
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="notif" checked>
-                <label for="notif">Je souhaite recevoir des notifications par email quand mes signalements sont
-                    traités.</label>
+                <button type="button" class="btn-login" style="width:100%;margin-top:4px" onclick="validateStep1()">
+                    Continuer <i class="ti ti-arrow-right" style="font-size:15px;vertical-align:-2px"></i>
+                </button>
             </div>
 
-            <div class="alert-success" id="success-alert">
-                <div class="alert-title"><i class="ti ti-circle-check"></i>Compte créé avec succès !</div>
-                <p>Bienvenue sur SmartWaste. Vous allez être redirigé vers la page de connexion.</p>
-            </div>
+            <!-- ÉTAPE 2 : Sécurité -->
+            <div class="step-panel" id="panel-2">
+                <div class="section-title"><i class="ti ti-lock"></i>Sécurité du compte</div>
+                <div class="form-group">
+                    <label class="form-label">Mot de passe</label>
+                    <div class="password-wrap">
+                        <input type="password" class="form-input" id="password" name="password" placeholder="••••••••"
+                            oninput="checkStrength(this.value)" required>
+                        <button class="toggle-pw" type="button" onclick="togglePw('password',this)" tabindex="-1">
+                            <i class="ti ti-eye"></i>
+                        </button>
+                    </div>
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strength-fill"></div>
+                    </div>
+                    <div class="strength-label" id="strength-label" style="color:#bbb">—</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirmer le mot de passe</label>
+                    <div class="password-wrap">
+                        <input type="password" class="form-input" id="password2" name="password2" placeholder="••••••••" required>
+                        <button class="toggle-pw" type="button" onclick="togglePw('password2',this)" tabindex="-1">
+                            <i class="ti ti-eye"></i>
+                        </button>
+                    </div>
+                    <div id="pw-match-msg" style="font-size:11px;margin-top:4px;min-height:14px"></div>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="cgu" required>
+                    <label for="cgu">J'accepte les <a href="#">Conditions d'utilisation</a> et la <a href="#">Politique de
+                            confidentialité</a> de SmartWaste.</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="notif" checked>
+                    <label for="notif">Je souhaite recevoir des notifications par email quand mes signalements sont
+                        traités.</label>
+                </div>
 
-            <div class="btn-nav">
-                <button type="button" class="btn-secondary" onclick="goStep(1)"><i class="ti ti-arrow-left"></i> Retour</button>
-                <button type="button" class="btn-login" onclick="handleRegister()"><i class="ti ti-check"></i> S'inscrire</button>
+                <div class="alert-success" id="success-alert">
+                    <div class="alert-title"><i class="ti ti-circle-check"></i>Compte créé avec succès !</div>
+                    <p>Bienvenue sur SmartWaste. Vous allez être redirigé vers la page de connexion.</p>
+                </div>
+
+                <div class="btn-nav">
+                    <button type="button" class="btn-secondary" onclick="goStep(1)"><i class="ti ti-arrow-left"></i> Retour</button>
+                    <button type="button" class="btn-login" onclick="handleRegister()"><i class="ti ti-check"></i> S'inscrire</button>
+                </div>
             </div>
-        </div>
         </form>
 
         <div class="footer-links" style="margin-top:20px">
             <p>Déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></p>
         </div>
     </div>
+{% endblock %}
 
-    <script src="{{ asset('authentication/js/register.js') }}"></script>
-</body>
-
-</html>
+{% block javascripts %}
+    <script src="{{ asset('assets/authentication/js/register.js') }}"></script>
+{% endblock %}

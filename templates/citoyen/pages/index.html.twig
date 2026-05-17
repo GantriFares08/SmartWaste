@@ -1,0 +1,56 @@
+{% extends 'base_citoyen.html.twig' %}
+
+{% block title %}SmartWaste — Accueil Citoyen{% endblock %}
+
+{% block citoyen_content %}
+<div class="page active" id="page-u-home">
+
+    <div class="topbar">
+        <span class="page-title">Bonjour, {{ app.user.prenom }}</span>
+        <div class="topbar-right">
+            <button class="btn btn-primary" onclick="window.location.href='{{ path('app_citoyen_signal') }}'"><i class="ti ti-plus"></i>Signaler</button>
+        </div>
+    </div>
+    <div class="content">
+        <div class="kpi-row">
+            <div class="kpi">
+                <div class="kpi-lbl"><i class="ti ti-alert-triangle"></i>Mes signalements</div>
+                <div class="kpi-val">{{ stats.total }}</div>
+                <div class="kpi-sub">au total</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-lbl"><i class="ti ti-check"></i>Traités</div>
+                <div class="kpi-val green">{{ stats.resolu }}</div>
+                <div class="kpi-sub">{% if stats.total > 0 %}{{ (stats.resolu / stats.total * 100)|round }}{% else %}0{% endif %} %</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-lbl"><i class="ti ti-clock"></i>En cours</div>
+                <div class="kpi-val amber">{{ stats.en_cours }}</div>
+                <div class="kpi-sub">en attente</div>
+            </div>
+        </div>
+
+        {# Nouvelle Carte Dynamique #}
+        {{ include('components/_map_card.html.twig') }}
+
+        <div class="card">
+            <div class="card-hd"><span class="card-title">Activité récente</span></div>
+            <div style="padding:15px; display:flex; flex-direction:column; gap:12px">
+                {% for act in recent_activity %}
+                    <div style="display:flex; gap:10px; font-size:13px">
+                        <div style="width:8px; height:8px; border-radius:50%; background:#185FA5; margin-top:5px"></div>
+                        <div>
+                            <div>{{ act.message }}</div>
+                            <div style="font-size:11px; color:var(--color-text-tertiary)">{{ act.createdAt|date('d/m/Y H:i') }}</div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div style="text-align:center; padding:20px; color:var(--color-text-tertiary)">
+                        Aucune activité récente.
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base_citoyen.html.twig' %}
+
+{% block title %}SmartWaste — Citoyen{% endblock %}
+
+{% block citoyen_content %}
+<div class="page active" id="page-u-messages">
+
+                    <div class="topbar">
+                        <span class="page-title">Assistance &amp; Messagerie</span>
+                        <div class="topbar-right">
+                            <span class="badge green">Support en ligne</span>
+                        </div>
+                    </div>
+                    <div class="chat-container">
+                        <div class="chat-header">
+                            <div class="avatar">MK</div>
+                            <div>
+                                <div style="font-size:14px;font-weight:600">Support SmartWaste</div>
+                                <div style="font-size:11px;color:var(--primary)">Administrateur en ligne</div>
+                            </div>
+                        </div>
+                        <div class="chat-messages" id="user-chat-box">
+            {% for msg in messages %}
+                {% if msg.expediteur == app.user %}
+                    <div class="message sent">
+                        <div>{{ msg.contenu }}</div>
+                        <div class="message-time">{{ msg.createdAt|date('H:i') }}</div>
+                    </div>
+                {% else %}
+                    <div class="message received">
+                        <div>{{ msg.contenu }}</div>
+                        <div class="message-time">{{ msg.createdAt|date('H:i') }}</div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div style="text-align: center; color: var(--color-text-tertiary); margin-top: 20px;">
+                    Aucun message. Commencez la discussion ci-dessous.
+                </div>
+            {% endfor %}
+        </div>
+        <form method="POST" class="chat-input-area" style="margin: 0; display: flex; width: 100%;">
+            <input type="text" name="contenu" class="chat-input" placeholder="Posez votre question..." required style="flex-grow: 1;">
+            <button type="submit" class="btn-send"><i class="ti ti-send"></i></button>
+        </form>
+    </div>
+                
+</div>
+<script>
+    // Scroll to bottom of chat
+    const chatBox = document.getElementById('user-chat-box');
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+{% endblock %}

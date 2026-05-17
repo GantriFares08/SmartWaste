@@ -1,0 +1,53 @@
+<div class="sidebar">
+    <div class="logo">
+        <div class="logo-name"><span class="logo-dot"></span>SmartWaste</div>
+        <div class="logo-sub">Gestion intelligente</div>
+    </div>
+
+    <div class="nav">
+        <span class="nav-section">Principal</span>
+        <a href="{{ path('app_admin_dashboard') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_dashboard' ? 'active' : '' }}">
+            <i class="ti ti-layout-dashboard"></i>Tableau de bord
+        </a>
+        <a href="{{ path('app_admin_map') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_map' ? 'active' : '' }}">
+            <i class="ti ti-map-pin"></i>Carte
+        </a>
+        <a href="{{ path('app_admin_signalements') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_signalements' ? 'active' : '' }}">
+            <i class="ti ti-alert-triangle"></i>Signalements
+        </a>
+        <a href="{{ path('app_admin_messages') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_messages' ? 'active' : '' }}">
+            <i class="ti ti-message"></i>Messages
+        </a>
+        {% set unread_notifs = app.user.notifications|filter(n => not n.lue)|length %}
+        <a href="{{ path('app_admin_notifs') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_notifs' ? 'active' : '' }}" style="justify-content: space-between;">
+            <div style="display:flex; align-items:center; gap:10px;"><i class="ti ti-bell"></i>Notifications</div>
+            {% if unread_notifs > 0 %}
+                <span style="background: #ff4757; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold;">{{ unread_notifs }}</span>
+            {% endif %}
+        </a>
+        <span class="nav-section">Administration</span>
+        <a href="{{ path('app_admin_users') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_users' ? 'active' : '' }}">
+            <i class="ti ti-users"></i>Utilisateurs
+        </a>
+        <a href="{{ path('app_admin_add_admin') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_add_admin' ? 'active' : '' }}">
+            <i class="ti ti-user-plus"></i>Ajouter Admin
+        </a>
+        <a href="{{ path('app_admin_reports') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_reports' ? 'active' : '' }}">
+            <i class="ti ti-file-analytics"></i>Rapports
+        </a>
+        <a href="{{ path('app_admin_settings') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_admin_settings' ? 'active' : '' }}">
+            <i class="ti ti-settings"></i>Paramètres
+        </a>
+    </div>
+
+    <div class="user-bar">
+        <div class="avatar">{{ app.user.prenom|first|upper }}{{ app.user.nom|first|upper }}</div>
+        <div class="user-info">
+            <div class="user-name">{{ app.user.prenom }} {{ app.user.nom }}</div>
+            <div class="user-role">Administrateur</div>
+        </div>
+        <a href="{{ path('app_logout') }}" style="margin-left:auto; color:var(--color-text-tertiary); text-decoration:none;" title="Déconnexion">
+            <i class="ti ti-logout" style="font-size:18px"></i>
+        </a>
+    </div>
+</div>

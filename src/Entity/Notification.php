@@ -14,7 +14,7 @@ class Notification
 
     #[ORM\Column] private ?bool $lue = false;
 
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'notifications')]
 
     #[ORM\JoinColumn(nullable: false)]
 
